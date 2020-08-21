@@ -3,6 +3,7 @@
 <a href="/">SeeLife</a> -
 <a href="/">Home</a> -
 <#if user??>
+	<a href="/new_note">What's happening?</a> -
 	Hello, ${user.getUsername()}.
 	<form action="/logout" method="post">
 		<input type="hidden" name="_csrf" value="${_csrf.token}" />

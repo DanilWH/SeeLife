@@ -3,8 +3,10 @@
 <@base.content title="SeeLife">
 
 	<h1>SeeLife</h1>
-	<#list days as day>
-		<div>${day.title}</div>
-	</#list>
+	<ul>
+		<#list days as day>
+			<li><a href="/day/id/${day.id}">${day.localDate}: ${day.title}</a></li>
+		</#list>
+	</ul>
 
 </@base.content>

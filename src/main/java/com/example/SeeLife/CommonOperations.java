@@ -1,11 +1,20 @@
 package com.example.SeeLife;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
+import com.example.SeeLife.model.Day;
 import com.example.SeeLife.model.User;
 import com.example.SeeLife.repository.UserRepo;
 
 public interface CommonOperations {
     
     public static final String fieldRequiredMsg = "This field is required!";
+    
+    public static void checkOwner(Long userId, Long ownerId) {
+        if (!userId.equals(ownerId))
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+    }
     
     public static String fieldIsEmpty(String field) {
         if (field != null && field.trim().isEmpty())

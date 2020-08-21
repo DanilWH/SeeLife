@@ -3,10 +3,16 @@ package com.example.SeeLife.model;
 import java.time.LocalDate;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.Size;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 public class Day {
@@ -21,6 +27,21 @@ public class Day {
     private String title;
     
     private Integer notesNumber;
+    
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="user_id")
+    @OnDelete(action=OnDeleteAction.CASCADE)
+    private User owner;
+    
+    public Day() {
+    }
+    
+    public Day(String title, User owner) {
+        this.title = title;
+        this.owner = owner;
+        this.localDate = LocalDate.now();
+        this.notesNumber = 0;
+    }
     
     public Long getId() {
         return this.id;
@@ -38,6 +59,10 @@ public class Day {
         return this.notesNumber;
     }
     
+    public User getOwner() {
+        return this.owner;
+    }
+    
     public void setId(Long id) {
         this.id = id;
     }
@@ -52,5 +77,9 @@ public class Day {
     
     public void setNotesNumber(Integer notesNumber) {
         this.notesNumber = notesNumber;
+    }
+    
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 }
