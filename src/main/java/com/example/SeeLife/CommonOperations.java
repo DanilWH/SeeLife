@@ -16,11 +16,8 @@ public interface CommonOperations {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
     }
     
-    public static String fieldIsEmpty(String field) {
-        if (field != null && field.trim().isEmpty())
-            return fieldRequiredMsg;
-        else
-            return null;
+    public static boolean fieldIsEmpty(String field) {
+        return field != null && field.trim().isEmpty();
     }
 
     public static String isUsernameValid(String username, UserRepo userRepo) {
@@ -68,7 +65,7 @@ public interface CommonOperations {
         
         final int passwordMinLen = 8;
         
-        if (fieldIsEmpty(password) != null)
+        if (fieldIsEmpty(password))
             return "This password is entirely of spaces.";
         if (password.equals(password_confirm) == false)
             return "Your passwords didn't match. Please try again.";

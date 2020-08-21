@@ -37,7 +37,7 @@ public class NoteController {
         Day day = this.dayRepo.findById(dayId).get();
         CommonOperations.checkOwner(current_user.getId(), day.getOwner().getId());
         // find the note that belong to the day.
-        List<Note> notes = this.noteRepo.findNoteByDayId(dayId);
+        List<Note> notes = this.noteRepo.findByDayId(dayId);
         model.addAttribute("notes", notes);
         
         return "notes";
@@ -51,10 +51,16 @@ public class NoteController {
     @PostMapping("/new_note")
     public String save_note(
             @RequestParam String text,
-            @AuthenticationPrincipal User current_user
+            @AuthenticationPrincipal User current_user,
+            Model model
     ) {
+        if (CommonOperations.fieldIsEmpty(text)) {
+            model.addAttribute("message", CommonOperations.fieldRequiredMsg);
+            return "new_note";
+        }
+        
         // create a new day if it doesn't exist yet.
-        Day day = this.dayRepo.findByLocalDate(LocalDate.now());
+        Day day = this.dayRepo.findByLocalDateAndOwnerId(LocalDate.now(), current_user.getId());
         
         if (day == null) {
             Day new_day = new Day(
