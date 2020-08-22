@@ -37,7 +37,7 @@ public class NoteController {
         Day day = this.dayRepo.findById(dayId).get();
         CommonOperations.checkOwner(current_user.getId(), day.getOwner().getId());
         // find the note that belong to the day.
-        List<Note> notes = this.noteRepo.findByDayId(dayId);
+        List<Note> notes = this.noteRepo.findByDayIdOrderByLocalTimeDesc(dayId);
         model.addAttribute("notes", notes);
         
         return "notes";

@@ -1,6 +1,7 @@
 package com.example.SeeLife.model;
 
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -38,6 +39,13 @@ public class Note {
         this.localTime = LocalTime.now();
         this.text = text;
         this.day = day;
+    }
+    
+    public String getFormattedLocalTime() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("h:m:s a");
+        String text = this.localTime.format(formatter);
+        
+        return text;
     }
     
     public Long getId() {

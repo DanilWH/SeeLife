@@ -8,6 +8,6 @@ import com.example.SeeLife.model.Note;
 
 public interface NoteRepo extends CrudRepository<Note, Long> {
     
-    List<Note> findByDayId(Long dayId);
+    List<Note> findByDayIdOrderByLocalTimeDesc(Long dayId);
 
 }

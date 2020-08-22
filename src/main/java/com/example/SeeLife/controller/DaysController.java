@@ -20,7 +20,7 @@ public class DaysController {
             @AuthenticationPrincipal User current_user,
             Model model
     ) {
-        Iterable<Day> days = this.dayRepo.findByOwnerId(current_user.getId());
+        Iterable<Day> days = this.dayRepo.findByOwnerIdOrderByLocalDateDesc(current_user.getId());
         model.addAttribute("days", days);
         
         return "days";

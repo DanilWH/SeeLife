@@ -11,7 +11,7 @@
 						${line}<#sep><br />
 					</#list>
 					<hr />
-					<div align="right">at ${note.localTime}</div>
+					<div align="right">at ${note.getFormattedLocalTime()}</div>
 				</p>
 			</li>
 		</#list>

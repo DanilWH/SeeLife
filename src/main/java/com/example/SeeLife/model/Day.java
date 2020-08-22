@@ -1,6 +1,7 @@
 package com.example.SeeLife.model;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -41,6 +42,13 @@ public class Day {
         this.owner = owner;
         this.localDate = LocalDate.now();
         this.notesNumber = 0;
+    }
+    
+    public String getFormattedLocalDate() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E MMM d, uuuu");
+        String text = this.localDate.format(formatter);
+        
+        return text;
     }
     
     public Long getId() {
