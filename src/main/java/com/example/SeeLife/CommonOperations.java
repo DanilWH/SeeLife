@@ -12,8 +12,8 @@ public interface CommonOperations {
     
     public static final String fieldRequiredMsg = "This field is required!";
     
-    public static void checkOwner(Long userId, Long ownerId) {
-        if (!userId.equals(ownerId))
+    public static void checkOwner(Long current_userId, Long ownerId) {
+        if (!current_userId.equals(ownerId))
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
     }
     
@@ -23,6 +23,11 @@ public interface CommonOperations {
     
     public static boolean isRelevant(LocalDate localDate) {
         return localDate.equals(LocalDate.now());
+    }
+    
+    public static void checkRelevant(LocalDate localDate) {
+        if (!isRelevant(localDate))
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
     }
     
     public static String isUsernameValid(String username, UserRepo userRepo) {

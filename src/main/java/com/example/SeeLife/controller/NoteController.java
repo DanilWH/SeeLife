@@ -83,4 +83,47 @@ public class NoteController {
         
         return "redirect:/day/id/" + day.getId();
     }
+    
+    @GetMapping("/edit_note/id/{noteId}")
+    public String edit_note(
+            @PathVariable(value="noteId") Long noteId,
+            @AuthenticationPrincipal User current_user,
+            Model model
+    ) {
+        Note note = this.noteRepo.findById(noteId).get();
+        
+        CommonOperations.checkOwner(current_user.getId(), note.getDay().getOwner().getId());
+        // check if the user wants to edit the note of the day of its creation.
+        CommonOperations.checkRelevant(note.getDay().getLocalDate());
+        
+        model.addAttribute("note", note);
+        
+        return "edit_note";
+    }
+    
+    @PostMapping("/edit_note/id/{noteId}")
+    public String update_note(
+            @PathVariable(value="noteId") Long noteId,
+            @AuthenticationPrincipal User current_user,
+            @RequestParam String text,
+            Model model
+    ) {
+        Note note = this.noteRepo.findById(noteId).get();
+        
+        CommonOperations.checkOwner(current_user.getId(), note.getDay().getOwner().getId());
+        // check if the user wants to edit the note of the day of its creation.
+        CommonOperations.checkRelevant(note.getDay().getLocalDate());
+        
+        // check if the field isn't empty.
+        if (CommonOperations.fieldIsEmpty(text)) {
+            model.addAttribute("message", CommonOperations.fieldRequiredMsg);
+            return edit_note(noteId, current_user, model);
+        }
+        
+        // if everything is valid we update the text of the note and update it in the database.
+        note.setText(text);
+        this.noteRepo.save(note);
+        
+        return "redirect:/day/id/" + note.getDay().getId();
+    }
 }

@@ -24,6 +24,9 @@
 					</#list>
 					<hr />
 					<div align="right">at ${note.getFormattedLocalTime()}</div>
+					<#if isRelevant == true>
+						<div><a href="/edit_note/id/${note.id}">Edit note</a></div>
+					</#if>
 				</p>
 			</li>
 		</#list>
