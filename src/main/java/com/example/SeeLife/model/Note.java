@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PreRemove;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -39,6 +40,12 @@ public class Note {
         this.localTime = LocalTime.now();
         this.text = text;
         this.day = day;
+        this.day.setNotesNumber(this.day.getNotesNumber() + 1);
+    }
+    
+    @PreRemove
+    public void onDelete() {
+        this.day.setNotesNumber(this.day.getNotesNumber() - 1);
     }
     
     public String getFormattedLocalTime() {

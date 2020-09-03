@@ -1,9 +1,10 @@
 package com.example.SeeLife;
 
+import java.time.LocalDate;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.example.SeeLife.model.Day;
 import com.example.SeeLife.model.User;
 import com.example.SeeLife.repository.UserRepo;
 
@@ -19,7 +20,11 @@ public interface CommonOperations {
     public static boolean fieldIsEmpty(String field) {
         return field != null && field.trim().isEmpty();
     }
-
+    
+    public static boolean isRelevant(LocalDate localDate) {
+        return localDate.equals(LocalDate.now());
+    }
+    
     public static String isUsernameValid(String username, UserRepo userRepo) {
         /*** 
          * Checks if the username is valid.
