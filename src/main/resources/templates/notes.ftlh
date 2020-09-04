@@ -30,6 +30,9 @@
 				</p>
 			</li>
 		</#list>
+		<#if isRelevant == false>
+			<div align="middle"><h2>...ZZZ...</h2></div>
+		</#if>
 	</ul>
 
 </@base.content>
