@@ -1,9 +1,11 @@
 package com.example.SeeLife.controller;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.SeeLife.CommonOperations;
 import com.example.SeeLife.model.Day;
@@ -26,6 +29,9 @@ public class NoteController {
     private DayRepo dayRepo;
     @Autowired
     private NoteRepo noteRepo;
+    
+    @Value("${upload.path}")
+    private String uploadPath;
 
     @GetMapping("/day/id/{dayId}")
     public String notes(
@@ -56,10 +62,11 @@ public class NoteController {
     
     @PostMapping("/new_note")
     public String save_note(
-            @RequestParam String text,
             @AuthenticationPrincipal User current_user,
+            @RequestParam String text,
+            @RequestParam("files") List<MultipartFile> files,
             Model model
-    ) {
+    ) throws IOException {
         if (CommonOperations.fieldIsEmpty(text)) {
             model.addAttribute("message", CommonOperations.fieldRequiredMsg);
             return "new_note";
@@ -78,6 +85,8 @@ public class NoteController {
         
         // create a new note and save it.
         Note new_note = new Note(text, day);
+        CommonOperations.uploadFiles(files, uploadPath, new_note);
+        
         this.noteRepo.save(new_note);
         
         

@@ -18,10 +18,25 @@
 		<#list notes as note>
 			<li>
 				<p>
-					<#assign lines = note.text?split('\n') />
-					<#list lines as line>
-						${line}<#sep><br />
-					</#list>
+					<div>
+						<#assign lines = note.text?split('\n') />
+						<#list lines as line>
+							${line}<#sep><br />
+						</#list>
+					</div>
+					
+					<div>
+						<#list note.images as image>
+							<img src="/img/${image}" />
+						</#list>
+					</div>
+					
+					<div>
+						<#list note.videos as video>
+							<video src="/video/${video}" preload="metadata" controls></video>
+						</#list>
+					</div>
+					
 					<hr />
 					<div align="right">at ${note.getFormattedLocalTime()}</div>
 					<#if isRelevant == true>

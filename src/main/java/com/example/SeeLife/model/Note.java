@@ -2,8 +2,12 @@ package com.example.SeeLife.model;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -13,6 +17,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PreRemove;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -28,6 +34,34 @@ public class Note {
     @Column(columnDefinition="TEXT")
     private String text;
     
+    @ElementCollection
+    @CollectionTable(name = "images", joinColumns = @JoinColumn(name = "note_id")) // choose the name of the DB table storing the List<>
+    @JoinColumn(name = "note_id")            // name of the @Id column of this entity
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @Cascade(value={CascadeType.ALL})
+    private List<String> images;
+    
+    @ElementCollection
+    @CollectionTable(name = "videos", joinColumns = @JoinColumn(name = "note_id")) // choose the name of the DB table storing the List<>
+    @JoinColumn(name = "note_id")            // name of the @Id column of this entity
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @Cascade(value={CascadeType.ALL})
+    private List<String> videos;
+    
+    @ElementCollection
+    @CollectionTable(name = "audios", joinColumns = @JoinColumn(name = "note_id")) // choose the name of the DB table storing the List<>
+    @JoinColumn(name = "note_id")            // name of the @Id column of this entity
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @Cascade(value={CascadeType.ALL})
+    private List<String> audios;
+    
+    @ElementCollection
+    @CollectionTable(name = "other_files", joinColumns = @JoinColumn(name = "note_id")) // choose the name of the DB table storing the List<>
+    @JoinColumn(name = "note_id")            // name of the @Id column of this entity
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @Cascade(value={CascadeType.ALL})
+    private List<String> other_files;
+    
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="day_id")
     @OnDelete(action=OnDeleteAction.CASCADE)
@@ -41,6 +75,9 @@ public class Note {
         this.text = text;
         this.day = day;
         this.day.setNotesNumber(this.day.getNotesNumber() + 1);
+        
+        // initialize the storages of files.
+        this.images = this.videos = this.audios = this.other_files = new ArrayList<String>();
     }
     
     @PreRemove
@@ -67,6 +104,22 @@ public class Note {
         return this.text;
     }
     
+    public List<String> getImages() {
+        return this.images;
+    }
+    
+    public List<String> getVideos() {
+        return this.videos;
+    }
+    
+    public List<String> getAudios() {
+        return this.audios;
+    }
+    
+    public List<String> getOtherFiles() {
+        return this.other_files;
+    }
+    
     public Day getDay() {
         return this.day;
     }
@@ -81,6 +134,22 @@ public class Note {
     
     public void setText(String text) {
         this.text = text;
+    }
+    
+    public void setImages(List<String> images) {
+        this.images = images;
+    }
+    
+    public void setVideos(List<String> videos) {
+        this.videos = videos;
+    }
+    
+    public void setAudios(List<String> audios) {
+        this.audios = audios;
+    }
+    
+    public void setOtherFiles(List<String> other_files) {
+        this.other_files = other_files;
     }
     
     public void setDay(Day day) {

@@ -1,10 +1,19 @@
 package com.example.SeeLife;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import javax.activation.MimetypesFileTypeMap;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.example.SeeLife.model.Note;
 import com.example.SeeLife.model.User;
 import com.example.SeeLife.repository.UserRepo;
 
@@ -97,5 +106,81 @@ public interface CommonOperations {
         
         // return null as a result if the password is valid.
         return null;
+    }
+    
+    public static List<String> getImages(List<String> files) {
+        List<String> images = new ArrayList<String>();
+        
+        for (String file : files) {
+            File fileObject = new File(file);
+            
+            String mimetype= new MimetypesFileTypeMap().getContentType(fileObject);
+            String type = mimetype.split("/")[0];
+            
+            if(type.equals("image"))
+                images.add(fileObject.getName());
+        }
+        
+        return images;
+    }
+    
+    public static String getFileType(MultipartFile file) {
+        File fileObject = new File(file.getOriginalFilename());
+        
+        String mimetype = new MimetypesFileTypeMap().getContentType(fileObject);
+        String type = mimetype.split("/")[0];
+        
+        return type;
+    }
+    
+    public static void uploadFiles(
+            List<MultipartFile> files, String uploadPath, Note note
+    ) throws IOException {
+        
+        // check if the user didn't upload at least one file.
+        if (files == null || files.isEmpty())
+            return;
+        
+        // if the user uploaded some files save files into different tables and
+        // directories on the server depending on the type of the file.
+        for (MultipartFile file : files) {
+            List<String> fileDBTable = new ArrayList<String>();
+            String directory = "";
+            
+            if (getFileType(file).equals("image")) {
+                directory = uploadPath + "/images";
+                fileDBTable = note.getImages(); 
+            }
+            else if (getFileType(file).equals("video")) {
+                directory = uploadPath + "/videos";
+                fileDBTable = note.getVideos();
+            }
+            else if (getFileType(file).equals("audio")) {
+                directory = uploadPath + "/audios";
+                fileDBTable = note.getAudios();
+            }
+            else {
+                directory = uploadPath + "/otherFiles";
+                fileDBTable = note.getOtherFiles();
+            }
+            
+            // make the directory if it doesn't exist.
+            File uploadDir = new File(directory);
+            
+            if (!uploadDir.exists())
+                uploadDir.mkdirs();
+            
+            // create a random uuid for the file.
+            String uuidFile = UUID.randomUUID().toString();
+            // concatinate the uuid name with the file name.
+            String resultFilename = uuidFile + "." + file.getOriginalFilename();
+            
+            // transrer the current file to the directory.
+            file.transferTo(new File(directory + "/" + resultFilename));
+            
+            System.out.println(fileDBTable);
+            // save the filename into the database.
+            fileDBTable.add(resultFilename);
+        }
     }
 }
