@@ -25,15 +25,24 @@
 						</#list>
 					</div>
 					
+					<!-- show images -->
 					<div>
 						<#list note.images as image>
 							<img src="/img/${image}" />
 						</#list>
 					</div>
-					
+				
+					<!-- show videos -->
 					<div>
 						<#list note.videos as video>
 							<video src="/video/${video}" preload="metadata" controls></video>
+						</#list>
+					</div>
+					
+					<!-- show audio -->
+					<div>
+						<#list note.audios as audio>
+							<audio src="/audio/${audio}" preload="metadata" controls></audio>
 						</#list>
 					</div>
 					

@@ -77,7 +77,10 @@ public class Note {
         this.day.setNotesNumber(this.day.getNotesNumber() + 1);
         
         // initialize the storages of files.
-        this.images = this.videos = this.audios = this.other_files = new ArrayList<String>();
+        this.images = new ArrayList<String>();
+        this.videos = new ArrayList<String>();
+        this.audios = new ArrayList<String>();
+        this.other_files = new ArrayList<String>();
     }
     
     @PreRemove

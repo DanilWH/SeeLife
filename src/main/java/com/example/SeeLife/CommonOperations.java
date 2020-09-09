@@ -2,6 +2,9 @@ package com.example.SeeLife;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -124,13 +127,12 @@ public interface CommonOperations {
         return images;
     }
     
-    public static String getFileType(MultipartFile file) {
-        File fileObject = new File(file.getOriginalFilename());
+    public static String getFileType(MultipartFile file) throws IOException {
+        Path file_path = Paths.get(file.getOriginalFilename());
+        String contentType = Files.probeContentType(file_path);
+        String fileType = contentType.split("/")[0];
         
-        String mimetype = new MimetypesFileTypeMap().getContentType(fileObject);
-        String type = mimetype.split("/")[0];
-        
-        return type;
+        return fileType;
     }
     
     public static void uploadFiles(
@@ -138,7 +140,7 @@ public interface CommonOperations {
     ) throws IOException {
         
         // check if the user didn't upload at least one file.
-        if (files == null || files.isEmpty())
+        if (files == null || files.get(0).isEmpty())
             return;
         
         // if the user uploaded some files save files into different tables and
@@ -147,15 +149,17 @@ public interface CommonOperations {
             List<String> fileDBTable = new ArrayList<String>();
             String directory = "";
             
-            if (getFileType(file).equals("image")) {
+            String fileType = getFileType(file);
+            
+            if (fileType.equals("image")) {
                 directory = uploadPath + "/images";
                 fileDBTable = note.getImages(); 
             }
-            else if (getFileType(file).equals("video")) {
+            else if (fileType.equals("video")) {
                 directory = uploadPath + "/videos";
                 fileDBTable = note.getVideos();
             }
-            else if (getFileType(file).equals("audio")) {
+            else if (fileType.equals("audio")) {
                 directory = uploadPath + "/audios";
                 fileDBTable = note.getAudios();
             }
@@ -178,7 +182,6 @@ public interface CommonOperations {
             // transrer the current file to the directory.
             file.transferTo(new File(directory + "/" + resultFilename));
             
-            System.out.println(fileDBTable);
             // save the filename into the database.
             fileDBTable.add(resultFilename);
         }

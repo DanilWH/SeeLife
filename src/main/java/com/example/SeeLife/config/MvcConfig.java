@@ -23,6 +23,9 @@ public class MvcConfig implements WebMvcConfigurer {
         
         registry.addResourceHandler("/video/**")
                 .addResourceLocations("file://" + this.uploadPath + "/videos/");
+        
+        registry.addResourceHandler("/audio/**")
+                .addResourceLocations("file://" + this.uploadPath + "/audios/");
     }
 
 }
