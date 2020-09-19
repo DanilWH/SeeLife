@@ -3,6 +3,7 @@ package com.example.SeeLife.controller;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -85,7 +86,7 @@ public class NoteController {
         
         // create a new note and save it.
         Note new_note = new Note(text, day);
-        CommonOperations.uploadFiles(files, uploadPath, new_note);
+        CommonOperations.uploadFiles(files, this.uploadPath, new_note);
         
         this.noteRepo.save(new_note);
         
@@ -115,8 +116,9 @@ public class NoteController {
             @PathVariable(value="noteId") Long noteId,
             @AuthenticationPrincipal User current_user,
             @RequestParam String text,
+            @RequestParam(required=false) Set<String> deletingFiles,
             Model model
-    ) {
+    ) throws IOException {
         Note note = this.noteRepo.findById(noteId).get();
         
         CommonOperations.checkOwner(current_user.getId(), note.getDay().getOwner().getId());
@@ -129,8 +131,11 @@ public class NoteController {
             return edit_note(noteId, current_user, model);
         }
         
-        // if everything is valid we update the text of the note and update it in the database.
+        // if everything is valid we update the text of the note
         note.setText(text);
+        // remove the file that were selected.
+        CommonOperations.deleteFiles(note, deletingFiles, this.uploadPath);
+        // and update it in the database.
         this.noteRepo.save(note);
         
         return "redirect:/day/id/" + note.getDay().getId();

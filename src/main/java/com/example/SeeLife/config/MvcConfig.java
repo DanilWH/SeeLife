@@ -18,7 +18,7 @@ public class MvcConfig implements WebMvcConfigurer {
     
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/img/**")
+        registry.addResourceHandler("/image/**")
                 .addResourceLocations("file://" + this.uploadPath + "/images/");
         
         registry.addResourceHandler("/video/**")
@@ -26,6 +26,8 @@ public class MvcConfig implements WebMvcConfigurer {
         
         registry.addResourceHandler("/audio/**")
                 .addResourceLocations("file://" + this.uploadPath + "/audios/");
+        
+        registry.addResourceHandler("/document/**")
+                .addResourceLocations("file://" + this.uploadPath + "/documents/");
     }
-
 }

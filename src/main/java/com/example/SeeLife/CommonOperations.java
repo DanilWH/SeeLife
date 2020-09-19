@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.activation.MimetypesFileTypeMap;
@@ -127,10 +128,18 @@ public interface CommonOperations {
         return images;
     }
     
-    public static String getFileType(MultipartFile file) throws IOException {
-        Path file_path = Paths.get(file.getOriginalFilename());
+    public static String getFileType(String filename) throws IOException {
+        Path file_path = Paths.get(filename);
         String contentType = Files.probeContentType(file_path);
-        String fileType = contentType.split("/")[0];
+        String fileType = "";
+        
+        if (contentType != null)
+            fileType = contentType.split("/")[0];
+        else
+            return "document";
+        
+        if (!(fileType.equals("image") || fileType.equals("video") || fileType.equals("audio")))
+            return "document";
         
         return fileType;
     }
@@ -146,27 +155,11 @@ public interface CommonOperations {
         // if the user uploaded some files save files into different tables and
         // directories on the server depending on the type of the file.
         for (MultipartFile file : files) {
-            List<String> fileDBTable = new ArrayList<String>();
-            String directory = "";
             
-            String fileType = getFileType(file);
+            String fileType = getFileType(file.getOriginalFilename());
             
-            if (fileType.equals("image")) {
-                directory = uploadPath + "/images";
-                fileDBTable = note.getImages(); 
-            }
-            else if (fileType.equals("video")) {
-                directory = uploadPath + "/videos";
-                fileDBTable = note.getVideos();
-            }
-            else if (fileType.equals("audio")) {
-                directory = uploadPath + "/audios";
-                fileDBTable = note.getAudios();
-            }
-            else {
-                directory = uploadPath + "/otherFiles";
-                fileDBTable = note.getOtherFiles();
-            }
+            String directory = uploadPath + "/" + fileType + "s";
+            List<String> fileDBTable = note.getFilesByFileType(fileType);
             
             // make the directory if it doesn't exist.
             File uploadDir = new File(directory);
@@ -179,11 +172,35 @@ public interface CommonOperations {
             // concatinate the uuid name with the file name.
             String resultFilename = uuidFile + "." + file.getOriginalFilename();
             
-            // transrer the current file to the directory.
+            // transfer the current file to the directory.
             file.transferTo(new File(directory + "/" + resultFilename));
             
             // save the filename into the database.
             fileDBTable.add(resultFilename);
+        }
+    }
+    
+    public static void deleteFiles(Note note, Set<String> deletingFiles, String uploadPath) throws IOException {
+        if (deletingFiles == null || deletingFiles.isEmpty())
+            return;
+        
+        for (String deletingFile : deletingFiles) {
+            // get the file type (index 0) and the file name (index 1).
+            String[] file_info = deletingFile.split("/");
+            String filetype = file_info[1];
+            String filename = file_info[2];
+            
+            String fileType = getFileType(filename);
+            // get the list (table) of the file that are related to the deleting file type.
+            List<String> noteFiles = note.getFilesByFileType(fileType);
+            
+            // remove the file name from a table of the note.
+            noteFiles.remove(filename);
+            
+            // delete the file from the server.
+            String deletingFilePath = uploadPath + "/" + filetype + "s/" + filename;
+            File fileObject = new File(deletingFilePath);
+            fileObject.delete();
         }
     }
 }

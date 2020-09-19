@@ -3,7 +3,9 @@ package com.example.SeeLife.model;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -16,6 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PreRemove;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -56,11 +59,11 @@ public class Note {
     private List<String> audios;
     
     @ElementCollection
-    @CollectionTable(name = "other_files", joinColumns = @JoinColumn(name = "note_id")) // choose the name of the DB table storing the List<>
+    @CollectionTable(name = "documents", joinColumns = @JoinColumn(name = "note_id")) // choose the name of the DB table storing the List<>
     @JoinColumn(name = "note_id")            // name of the @Id column of this entity
     @OnDelete(action = OnDeleteAction.CASCADE)
     @Cascade(value={CascadeType.ALL})
-    private List<String> other_files;
+    private List<String> documents;
     
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="day_id")
@@ -80,7 +83,7 @@ public class Note {
         this.images = new ArrayList<String>();
         this.videos = new ArrayList<String>();
         this.audios = new ArrayList<String>();
-        this.other_files = new ArrayList<String>();
+        this.documents = new ArrayList<String>();
     }
     
     @PreRemove
@@ -93,6 +96,21 @@ public class Note {
         String text = this.localTime.format(formatter);
         
         return text;
+    }
+    
+    public List<String> getFilesByFileType(String fileType) {
+        switch (fileType) {
+        case "image":
+            return this.images;
+        case "video":
+            return this.videos;
+        case "audio":
+            return this.audios;
+        case "document":
+            return this.documents;
+        default:
+            return null;
+        }
     }
     
     public Long getId() {
@@ -119,8 +137,8 @@ public class Note {
         return this.audios;
     }
     
-    public List<String> getOtherFiles() {
-        return this.other_files;
+    public List<String> getDocuments() {
+        return this.documents;
     }
     
     public Day getDay() {
@@ -151,8 +169,8 @@ public class Note {
         this.audios = audios;
     }
     
-    public void setOtherFiles(List<String> other_files) {
-        this.other_files = other_files;
+    public void setDocuments(List<String> documents) {
+        this.documents = documents;
     }
     
     public void setDay(Day day) {

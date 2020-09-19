@@ -1,6 +1,6 @@
 <#import "parts/base.ftlh" as base />
 
-<@base.content title="Notes | See Life}">
+<@base.content title="Notes | See Life">
 
 	<h3>${day.getFormattedLocalDate()}: ${day.title}</h3>
 	
@@ -17,41 +17,61 @@
 	<ul>
 		<#list notes as note>
 			<li>
-				<p>
-					<div>
+				<div>
+					<p>
 						<#assign lines = note.text?split('\n') />
 						<#list lines as line>
 							${line}<#sep><br />
 						</#list>
-					</div>
+					</p>
 					
 					<!-- show images -->
-					<div>
-						<#list note.images as image>
-							<img src="/img/${image}" />
-						</#list>
-					</div>
+					<#if note.images?size != 0>
+						<div>
+							<#list note.images as image>
+								<img src="/image/${image}" />
+							</#list>
+						</div>
+					</#if>
 				
 					<!-- show videos -->
-					<div>
-						<#list note.videos as video>
-							<video src="/video/${video}" preload="metadata" controls></video>
-						</#list>
-					</div>
+					<#if note.videos?size != 0>
+						<div>
+							<#list note.videos as video>
+								<video src="/video/${video}" preload="metadata" controls></video>
+							</#list>
+						</div>
+					</#if>
 					
 					<!-- show audio -->
-					<div>
-						<#list note.audios as audio>
-							<audio src="/audio/${audio}" preload="metadata" controls></audio>
-						</#list>
-					</div>
+					<#if note.audios?size != 0>
+						<div>
+							<#list note.audios as audio>
+								<audio src="/audio/${audio}" preload="metadata" controls></audio>
+							</#list>
+						</div>
+					</#if>
+					
+					<!-- show documents -->
+					<#if note.documents?size != 0>
+						<div>
+							<#list note.documents as document>
+								<#assign filename = document?split('.') />
+								<div>
+									<a href="/document/${document}">
+										${filename[1]}<#if filename[2]??>.${filename[2]}</#if>
+									</a>
+								</div>
+							</#list>
+						</div>
+					</#if>
 					
 					<hr />
 					<div align="right">at ${note.getFormattedLocalTime()}</div>
 					<#if isRelevant == true>
 						<div><a href="/edit_note/id/${note.id}">Edit note</a></div>
 					</#if>
-				</p>
+				</div>
 			</li>
 		</#list>
 		<#if isRelevant == false>
