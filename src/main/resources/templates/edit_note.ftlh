@@ -2,7 +2,7 @@
 
 <@base.content title="Edit note | See Life">
 
-	<form action="/edit_note/id/${note.id}" method="post">
+	<form action="/edit_note/id/${note.id}" method="post" enctype="multipart/form-data">
 		<input type="hidden" name="_csrf" value="${_csrf.token}" />
 		<div><textarea name="text" required>${note.text}</textarea></div>
 		<div>${message?ifExists}</div>
@@ -80,6 +80,8 @@
 				</ul>
 			</#if>
 		</div>
+		
+		<div><input type="file" name="files" multiple /></div>
 		
 		<div><button name="submit">Save changes</button></div>
 	</form>

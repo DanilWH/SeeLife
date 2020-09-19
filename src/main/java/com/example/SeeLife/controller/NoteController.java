@@ -117,6 +117,7 @@ public class NoteController {
             @AuthenticationPrincipal User current_user,
             @RequestParam String text,
             @RequestParam(required=false) Set<String> deletingFiles,
+            @RequestParam("files") List<MultipartFile> uploadingFiles,
             Model model
     ) throws IOException {
         Note note = this.noteRepo.findById(noteId).get();
@@ -134,7 +135,9 @@ public class NoteController {
         // if everything is valid we update the text of the note
         note.setText(text);
         // remove the file that were selected.
-        CommonOperations.deleteFiles(note, deletingFiles, this.uploadPath);
+        CommonOperations.deleteFiles(deletingFiles, this.uploadPath, note);
+        // upload new files.
+        CommonOperations.uploadFiles(uploadingFiles, this.uploadPath, note);
         // and update it in the database.
         this.noteRepo.save(note);
         

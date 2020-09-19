@@ -180,7 +180,7 @@ public interface CommonOperations {
         }
     }
     
-    public static void deleteFiles(Note note, Set<String> deletingFiles, String uploadPath) throws IOException {
+    public static void deleteFiles(Set<String> deletingFiles, String uploadPath, Note note) {
         if (deletingFiles == null || deletingFiles.isEmpty())
             return;
         
@@ -190,9 +190,8 @@ public interface CommonOperations {
             String filetype = file_info[1];
             String filename = file_info[2];
             
-            String fileType = getFileType(filename);
             // get the list (table) of the file that are related to the deleting file type.
-            List<String> noteFiles = note.getFilesByFileType(fileType);
+            List<String> noteFiles = note.getFilesByFileType(filetype);
             
             // remove the file name from a table of the note.
             noteFiles.remove(filename);
