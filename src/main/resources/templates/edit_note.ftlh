@@ -50,7 +50,9 @@
 				<ul>
 					<#list note.audios as audio_name>
 						<li>
-							<audio src="/audio/${audio_name}" preload="metadata" controls></audio>
+							<audio src="/audio/${audio_name}" preload="metadata" controls>
+								
+							</audio>
 							<div>
 								<label>
 									<input type="checkbox" name="deletingFiles" value="/audio/${audio_name}" />

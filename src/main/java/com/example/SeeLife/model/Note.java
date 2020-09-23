@@ -3,9 +3,7 @@ package com.example.SeeLife.model;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -84,11 +82,6 @@ public class Note {
         this.videos = new ArrayList<String>();
         this.audios = new ArrayList<String>();
         this.documents = new ArrayList<String>();
-    }
-    
-    @PreRemove
-    public void onDelete() {
-        this.day.setNotesNumber(this.day.getNotesNumber() - 1);
     }
     
     public String getFormattedLocalTime() {

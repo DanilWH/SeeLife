@@ -6,12 +6,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-
-import javax.activation.MimetypesFileTypeMap;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
@@ -112,20 +109,33 @@ public interface CommonOperations {
         return null;
     }
     
-    public static List<String> getImages(List<String> files) {
-        List<String> images = new ArrayList<String>();
+    public static String getFileExtention (String filename) {
+        return filename.substring(filename.lastIndexOf('.') + 1);
+    }
+    
+    public static boolean fileIsSupported(String[] htmlSupportedAudioExtentions, String filename) {
+        String fileExtention = getFileExtention(filename);
         
-        for (String file : files) {
-            File fileObject = new File(file);
-            
-            String mimetype= new MimetypesFileTypeMap().getContentType(fileObject);
-            String type = mimetype.split("/")[0];
-            
-            if(type.equals("image"))
-                images.add(fileObject.getName());
+        for (String extention : htmlSupportedAudioExtentions)
+            if (extention.equals(fileExtention))
+                return true;
+        
+        return false;
+    }
+    
+    public static boolean fileTypeIsSupportedByHtml(String filetype, String filename) {
+        switch (filetype) {
+        case "image":
+            return fileIsSupported(new String[] {"bmp", "gif", "png", "webp", "jpeg", "jpg"}, filename);
+        case "video":
+            return fileIsSupported(new String[] {"mp4", "webm", "ogg"}, filename);
+        case "audio":
+            return fileIsSupported(new String[] {"mp3", "wav", "ogg", "m4a"}, filename);
+        default:
+            // if the file is not an image, not a video and not a audio
+            // then it's a document so any document is supported by html.
+            return true;
         }
-        
-        return images;
     }
     
     public static String getFileType(String filename) throws IOException {
@@ -136,6 +146,8 @@ public interface CommonOperations {
         if (contentType != null)
             fileType = contentType.split("/")[0];
         else
+            // if Files.probeContentType can not recognize the file extension
+            // the file is considered as a document.
             return "document";
         
         if (!(fileType.equals("image") || fileType.equals("video") || fileType.equals("audio")))
@@ -152,13 +164,18 @@ public interface CommonOperations {
         if (files == null || files.get(0).isEmpty())
             return;
         
-        // if the user uploaded some files save files into different tables and
-        // directories on the server depending on the type of the file.
+        // if the user uploaded some files,  save the files into different tables and
+        // directories on the server depending on the types of the files.
         for (MultipartFile file : files) {
             
             String fileType = getFileType(file.getOriginalFilename());
+            // files that are not supported by html are stored as documents.
+            if (!fileTypeIsSupportedByHtml(fileType, file.getOriginalFilename()))
+                fileType = "document";
             
+            // get the file path depending on its type.
             String directory = uploadPath + "/" + fileType + "s";
+            // get the necessary List (table in the db) depending on the file type.
             List<String> fileDBTable = note.getFilesByFileType(fileType);
             
             // make the directory if it doesn't exist.
@@ -169,7 +186,7 @@ public interface CommonOperations {
             
             // create a random uuid for the file.
             String uuidFile = UUID.randomUUID().toString();
-            // concatinate the uuid name with the file name.
+            // concatenate the uuid name with the file name.
             String resultFilename = uuidFile + "." + file.getOriginalFilename();
             
             // transfer the current file to the directory.
