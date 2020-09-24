@@ -90,7 +90,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getRoles();
+        return this.getRoles();
     }
 
     @Override
