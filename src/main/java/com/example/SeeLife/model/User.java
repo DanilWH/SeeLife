@@ -48,6 +48,10 @@ public class User implements UserDetails {
         this.password = password;
     }
     
+    public boolean isAdmin() {
+        return roles.contains(Role.ADMIN);
+    }
+    
     public Long getId() {
         return this.id;
     }

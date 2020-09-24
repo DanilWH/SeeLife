@@ -8,9 +8,9 @@
 		<div>${message?ifExists}</div>
 		
 		<div>
-			Choose file to delete if you want any:<br />
 			<!-- show images -->
 			<#if note.images?size != 0>
+				Choose images to delete:
 				<ul>
 					<#list note.images as img_name>
 						<li>
@@ -29,6 +29,7 @@
 		
 			<!-- show videos -->
 			<#if note.videos?size != 0>
+				Choose videos to delete:
 				<ul>
 					<#list note.videos as video_name>
 						<li>
@@ -48,6 +49,7 @@
 			<!-- show audio -->
 			<#if note.audios?size != 0>
 				<ul>
+					Choose audios to delete:
 					<#list note.audios as audio_name>
 						<li>
 							<audio src="/audio/${audio_name}" preload="metadata" controls>
@@ -67,6 +69,7 @@
 			
 			<!-- show documents -->
 			<#if note.documents?size != 0>
+				Choose documents to delete:
 				<ul>
 					<#list note.documents as doc_name>
 						<li>
