@@ -27,6 +27,8 @@
 		
 		<input type="hidden" name="_csrf" value="${_csrf.token}" />
 		
+		<!-- turn the link into a bootstrap button -->
+		<a href="/admin/user/${user.id}/delete">Delete</a>
 		<button name="submit">Save</button>
 	</form>
 

@@ -1,6 +1,5 @@
 package com.example.SeeLife.controller;
 
-import java.util.Collections;
 import java.util.Set;
 
 import javax.persistence.NoResultException;
@@ -75,6 +74,27 @@ public class AdminController {
         // update the repository only if the user has changed something.
         if (isChanged)
             this.userRepo.save(user);
+        
+        return "redirect:/admin/users";
+    }
+    
+    @GetMapping("/user/{userId}/delete")
+    public String delete_user_confirmation(
+            @PathVariable("userId") Long userId,
+            Model model
+    ) {
+        User user = this.userRepo.findById(userId).orElseThrow(() -> new NoResultException());
+        
+        model.addAttribute("user", user);
+        
+        return "admin/delete_user_confirmation";
+    }
+    
+    @PostMapping("/user/{userId}/delete")
+    public String delete_user(
+            @PathVariable("userId") Long userId
+    ) {
+        this.userRepo.deleteById(userId);
         
         return "redirect:/admin/users";
     }
