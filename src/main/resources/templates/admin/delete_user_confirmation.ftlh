@@ -8,6 +8,8 @@
 		All related items will be deleted.
 	</p>
 	<form action="/admin/user/${user.id}/delete" method="post">
+		<input type="hidden" name="_csrf" value="${_csrf.token}" />
+		
 		<button name="submit">Yes, I'm sure</button>
 		<!-- turn the link into a bootstrap button -->
 		<a href="/admin/edit_user/${user.id}">No, take me back</a>
