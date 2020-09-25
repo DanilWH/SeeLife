@@ -1,10 +1,12 @@
 package com.example.SeeLife.controller;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.NoResultException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,8 +16,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.SeeLife.CommonOperations;
+import com.example.SeeLife.model.Day;
+import com.example.SeeLife.model.Note;
 import com.example.SeeLife.model.Role;
 import com.example.SeeLife.model.User;
+import com.example.SeeLife.repository.DayRepo;
+import com.example.SeeLife.repository.NoteRepo;
 import com.example.SeeLife.repository.UserRepo;
 
 @Controller
@@ -23,8 +30,15 @@ import com.example.SeeLife.repository.UserRepo;
 @PreAuthorize("hasAuthority('ADMIN')")
 public class AdminController {
     
+    @Value("${upload.path}")
+    private String uploadPath;
+    
     @Autowired
     private UserRepo userRepo; 
+    @Autowired
+    private DayRepo dayRepo;
+    @Autowired
+    private NoteRepo noteRepo;
     
     @GetMapping("/users")
     public String users(Model model) {
@@ -94,6 +108,36 @@ public class AdminController {
     public String delete_user(
             @PathVariable("userId") Long userId
     ) {
+        // first of all, we have to delete all the user files from the server.
+        // a list of file types that the user can store.
+        String[] fileTypes = {"image", "video", "audio", "document"};
+        
+        // get all the user days.
+        Iterable<Day> userDays = this.dayRepo.findByOwnerId(userId);
+        
+        // go throw all the user days.
+        for (Day day : userDays) {
+            // get all notes of each day.
+            Iterable<Note> dayNotes = this.noteRepo.findByDayId(day.getId());
+            
+            // got throw all the notes of the day that the cycle iteration is currently on.
+            for (Note note : dayNotes) {
+                // go throw all file types. 
+                for (String fileType : fileTypes) {
+                    // get the appropriate storage according to the current type.
+                    List<String> filesStorage = note.getFilesByFileType(fileType);
+                    
+                    // go throw the list of filenames.
+                    for (String filename : filesStorage) {
+                        // find out the path to the current file.
+                        String path = this.uploadPath + "/" + fileType + "s/" + filename;
+                        CommonOperations.deleteFileFromServer(path);
+                    }
+                }
+            }
+        }
+        
+        // delete the user from the database.
         this.userRepo.deleteById(userId);
         
         return "redirect:/admin/users";

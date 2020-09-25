@@ -9,6 +9,7 @@ import com.example.SeeLife.model.Day;
 
 public interface DayRepo extends CrudRepository<Day, Long> {
     
+    Iterable<Day> findByOwnerId(Long owner_id);
     List<Day> findByOwnerIdOrderByLocalDateDesc(Long owner_id);
     Day findByLocalDateAndOwnerId(LocalDate local_date, Long owner_id);
 }

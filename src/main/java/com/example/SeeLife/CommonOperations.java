@@ -215,8 +215,15 @@ public interface CommonOperations {
             
             // delete the file from the server.
             String deletingFilePath = uploadPath + "/" + filetype + "s/" + filename;
-            File fileObject = new File(deletingFilePath);
-            fileObject.delete();
+            deleteFileFromServer(deletingFilePath);
         }
+    }
+    
+    public static void deleteFileFromServer(String path) {
+        File fileObject = new File(path);
+        boolean successDeletion = fileObject.delete();
+        
+        if (!successDeletion)
+            System.out.println("Couldn't delete the " + fileObject.getName() + " file!");
     }
 }
