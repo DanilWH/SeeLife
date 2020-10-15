@@ -142,4 +142,39 @@ public class AdminController {
         
         return "redirect:/admin/users";
     }
+    
+    @GetMapping("/edit_user/{userId}/password")
+    public String edit_user_password(
+            @PathVariable("userId") Long userId,
+            Model model
+    ) {
+        User user = this.userRepo.findById(userId).orElseThrow(() -> new NoResultException());
+        
+        model.addAttribute("username", user.getUsername());
+        model.addAttribute("userId", userId);
+        
+        return "admin/edit_user_password";
+    }
+    
+    @PostMapping("edit_user/{userId}/password")
+    public String update_user_password(
+            @PathVariable("userId") Long userId,
+            @RequestParam String password,
+            @RequestParam String password_confirm,
+            Model model
+    ) {
+        User user = this.userRepo.findById(userId).orElseThrow(() -> new NoResultException());
+        
+        // check if the password is valid.
+        String passwordMsg= CommonOperations.isPasswordValid(password, password_confirm);
+        if (passwordMsg != null) {
+            model.addAttribute("password_msg", passwordMsg);
+            return edit_user_password(userId, model);
+        }
+        
+        user.setPassword(password);
+        this.userRepo.save(user);
+        
+        return "redirect:/admin/edit_user/" + userId;
+    }
 }

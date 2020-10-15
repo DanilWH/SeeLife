@@ -11,7 +11,11 @@
 			</div>
 			<div>
 				<label for="password_id">Password:</label>
-				<input type="text" name="password" value="${user.password}" id="password_id" />
+				<small>
+					Raw passwords are not stored, so there is no way to see this user's password,
+					but you can change the password using
+					<a href="/admin/edit_user/${user.id}/password">this form</a>.
+				</small>
 			</div>
 		</fieldset>
 		<fieldset>
