@@ -53,7 +53,7 @@ public class AdminController {
             @PathVariable(value="userId") Long userId,
             Model model
     ) {
-        User user = this.userRepo.findById(userId).get();
+        User user = this.userRepo.findById(userId).orElseThrow(() -> new NoResultException());
         model.addAttribute("user", user);
         model.addAttribute("role_values", Role.values());
         

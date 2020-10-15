@@ -1,5 +1,7 @@
 package com.example.SeeLife.controller;
 
+import javax.persistence.NoResultException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -41,7 +43,7 @@ public class DaysController {
             @RequestParam String dayTitle,
             Model model
     ) {
-        Day day = this.dayRepo.findById(dayId).get();
+        Day day = this.dayRepo.findById(dayId).orElseThrow(() -> new NoResultException());
         
         // check if the user wants to change the day title at the day of its creation.
         CommonOperations.checkRelevant(day.getLocalDate());
