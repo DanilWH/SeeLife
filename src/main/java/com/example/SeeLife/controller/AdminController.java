@@ -64,9 +64,16 @@ public class AdminController {
     public String update_user(
             @PathVariable("userId") Long userId,
             @RequestParam String username,
-            @RequestParam String password,
-            @RequestParam(required = false) Set<Role> chosen_roles
+            @RequestParam(required = false) Set<Role> chosen_roles,
+            Model model
     ) {
+        // check if the username is valid first.
+        String username_msg = CommonOperations.isUsernameValid(username, this.userRepo);
+        if (username_msg != null) {
+            model.addAttribute("username_msg", username_msg);
+            return edit_user(userId, model);
+        }
+        
         User user = this.userRepo.findById(userId).orElseThrow(() -> new NoResultException());
         
         // we want to change the user data only if it has been changed,
@@ -74,10 +81,6 @@ public class AdminController {
         boolean isChanged = false;
         if (!user.getUsername().equals(username)) {
             user.setUsername(username);
-            isChanged = true;
-        }
-        if (!user.getPassword().equals(password)) {
-            user.setPassword(password);
             isChanged = true;
         }
         if (!user.getRoles().equals(chosen_roles)) {
@@ -163,14 +166,14 @@ public class AdminController {
             @RequestParam String password_confirm,
             Model model
     ) {
-        User user = this.userRepo.findById(userId).orElseThrow(() -> new NoResultException());
-        
-        // check if the password is valid.
+        // check if the password is valid first.
         String passwordMsg= CommonOperations.isPasswordValid(password, password_confirm);
         if (passwordMsg != null) {
             model.addAttribute("password_msg", passwordMsg);
             return edit_user_password(userId, model);
         }
+        
+        User user = this.userRepo.findById(userId).orElseThrow(() -> new NoResultException());
         
         user.setPassword(password);
         this.userRepo.save(user);
