@@ -45,10 +45,13 @@ public class AdminController {
             @RequestParam(required=false, defaultValue="") String user_filter,
             Model model
     ) {
-        Iterable<User> users;
+        List<User> users;
         
-        if (user_filter != null && !user_filter.isEmpty())
+        if (user_filter != null && !user_filter.isEmpty()) {
             users = this.userRepo.findByUsernameContaining(user_filter);
+            model.addAttribute("result", users.size());
+            model.addAttribute("total", this.userRepo.findAll().size());
+        }
         else
             users = this.userRepo.findAll();
             

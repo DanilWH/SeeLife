@@ -8,6 +8,8 @@ import com.example.SeeLife.model.User;
 
 public interface UserRepo extends CrudRepository<User, Long> {
     
+    @Override
+    List<User> findAll();
     User findByUsername(String username);
     List<User> findByUsernameContaining(String username);
     

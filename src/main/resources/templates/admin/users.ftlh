@@ -7,6 +7,9 @@
 	<form action="/admin/users" method="get">
 		<input type="search" name="user_filter" placeholder="Search users" />
 		<button>Search</button>
+		<#if result??>
+			<div><small>${result} results (<a href="?">${total} total</a>)</small></div>
+		</#if>
 	</form>
 	
 	<table>
