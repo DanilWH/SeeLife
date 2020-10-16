@@ -2,6 +2,13 @@
 
 <@base.content title="Admin Privileges | See Life">
 
+	<h3>Select user to change</h3>
+	
+	<form action="/admin/users" method="get">
+		<input type="search" name="user_filter" placeholder="Search users" />
+		<button>Search</button>
+	</form>
+	
 	<table>
 		<tr>
 			<th>User ID</th>

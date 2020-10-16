@@ -41,8 +41,17 @@ public class AdminController {
     private NoteRepo noteRepo;
     
     @GetMapping("/users")
-    public String users(Model model) {
-        Iterable<User> users = this.userRepo.findAll();
+    public String users(
+            @RequestParam(required=false, defaultValue="") String user_filter,
+            Model model
+    ) {
+        Iterable<User> users;
+        
+        if (user_filter != null && !user_filter.isEmpty())
+            users = this.userRepo.findByUsernameContaining(user_filter);
+        else
+            users = this.userRepo.findAll();
+            
         model.addAttribute("users", users);
         
         return "admin/users";
