@@ -3,6 +3,17 @@
 <@base.content title="SeeLife">
 
 	<h1>SeeLife</h1>
+	
+	<div>
+		<form method="get">
+			<input type="date" name="startDate" /> -
+			<input type="date" name="endDate" />
+			<button>Search</button>
+			<#if startDate??>
+				<div><small>${startDate} - ${endDate}</small></div>
+			</#if>
+		</form>
+	</div>
 	<ul>
 		<#list days as day>
 			<li>
@@ -10,7 +21,7 @@
 				<i>${day.notesNumber} notes</i>
 			</li>
 		<#else>
-			<div><p>...There're no days you write something...</p></div>
+			<div><p>...There're no days found...</p></div>
 		</#list>
 	</ul>
 

@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -225,5 +226,20 @@ public interface CommonOperations {
         
         if (!successDeletion)
             System.out.println("Couldn't delete the " + fileObject.getName() + " file!");
+    }
+    
+    public static String getFormattedLocalDate(LocalDate localDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E MMM d, uuuu");
+        String text = localDate.format(formatter);
+        
+        return text;
+    }
+    
+    public static String getFormattedLocalDate(String localDateString) {
+        LocalDate localDate = LocalDate.parse(localDateString);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E MMM d, uuuu");
+        String text = localDate.format(formatter);
+        
+        return text;
     }
 }

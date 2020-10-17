@@ -1,5 +1,8 @@
 package com.example.SeeLife.controller;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import javax.persistence.NoResultException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +29,47 @@ public class DaysController {
     private NoteController noteController;
     
     @GetMapping("/")
-    public String greeting(
-            @AuthenticationPrincipal User current_user,
+    public String show_days(
+            @AuthenticationPrincipal User currentUser,
+            @RequestParam(required=false, defaultValue="") String startDate,
+            @RequestParam(required=false, defaultValue="") String endDate,
             Model model
     ) {
-        Iterable<Day> days = this.dayRepo.findByOwnerIdOrderByLocalDateDesc(current_user.getId());
+        List<Day> days;
+        
+        // if both date fields are filled up.
+        if ((startDate != null && endDate != null) &&
+                (!startDate.isEmpty() && !endDate.isEmpty()))
+        {
+            days = this.dayRepo.findByLocalDateBetweenAndOwnerId(LocalDate.parse(startDate),
+                                                                 LocalDate.parse(endDate),
+                                                                 currentUser.getId());
+            
+            model.addAttribute("startDate", CommonOperations.getFormattedLocalDate(startDate));
+            model.addAttribute("endDate", CommonOperations.getFormattedLocalDate(endDate));
+        }
+        // if the startDate field is filled up only. 
+        else if (startDate != null && !startDate.isEmpty()) {
+            days = this.dayRepo.findByLocalDateGreaterThanEqualAndOwnerId(LocalDate.parse(startDate),
+                                                               currentUser.getId());
+            
+            model.addAttribute("startDate", CommonOperations.getFormattedLocalDate(startDate));
+            model.addAttribute("endDate",
+                    CommonOperations.getFormattedLocalDate(LocalDate.now()) + " (today)");
+        }
+        // if the endDate field is filled up only.
+        else if (endDate != null && !endDate.isEmpty()) {
+            days = this.dayRepo.findByLocalDateLessThanEqualAndOwnerId(LocalDate.parse(endDate),
+                                                                currentUser.getId());
+            
+            // get the local date of the very first day.
+            model.addAttribute("startDate", days.get(0).getFormattedLocalDate() + " (first day)");
+            model.addAttribute("endDate", CommonOperations.getFormattedLocalDate(endDate));
+        }
+        // if none of the fields are filled up.
+        else
+            days = this.dayRepo.findByOwnerIdOrderByLocalDateDesc(currentUser.getId());
+        
         model.addAttribute("days", days);
         
         return "days";
