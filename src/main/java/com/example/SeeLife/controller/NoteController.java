@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.NoResultException;
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +15,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -68,11 +66,15 @@ public class NoteController {
     @PostMapping("/new_note")
     public String save_note(
             @AuthenticationPrincipal User current_user,
-            @Valid @RequestBody String text,
+            @RequestParam String text,
             @RequestParam("files") List<MultipartFile> files,
             Model model
     ) throws IOException {
-        
+        // check if the field is empty.
+        if (CommonOperations.fieldIsEmpty(text)) {
+            model.addAttribute("message", CommonOperations.fieldRequiredMsg);
+            return "new_note";
+        }
         
         // create a new day if it doesn't exist yet.
         Day day = this.dayRepo.findByLocalDateAndOwnerId(LocalDate.now(), current_user.getId());
@@ -91,7 +93,6 @@ public class NoteController {
         CommonOperations.uploadFiles(files, this.uploadPath, new_note);
         
         this.noteRepo.save(new_note);
-        
         
         return "redirect:/day/id/" + day.getId();
     }

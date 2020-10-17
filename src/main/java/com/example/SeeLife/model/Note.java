@@ -15,7 +15,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -31,7 +30,6 @@ public class Note {
     
     private LocalTime localTime;
     
-    @NotBlank
     @Column(columnDefinition="TEXT")
     private String text;
     
