@@ -3,7 +3,7 @@
 
 <@base.content title="Registration | See Life">
 
-	<h3>Registration</h3>
+	<@common.header>Registration</@common.header>
 	
 	<form action="/registration" method="post">
 		<!-- username -->
@@ -13,7 +13,7 @@
 		<@common.password_form message="${password_msg?ifExists}" />
 		
 		<input type="hidden" name="_csrf" value="${_csrf.token}" />
-		<button name="submit">Create account</button>
+		<@common.send_form_btn>Create account</@common.send_form_btn>
 	</form>
 
 </@base.content>
