@@ -36,9 +36,7 @@
 
 <#macro header>
 
-	<div class="page-header">
-		<h1><#nested /></h1>
-	</div>
+	<h1 class="display-4"><#nested /></h1>
 	<hr />
 	
 </#macro>

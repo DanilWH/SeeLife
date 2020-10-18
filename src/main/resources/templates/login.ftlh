@@ -3,6 +3,8 @@
 
 <@base.content title="Log In | See Life">
 
+	<@common.header>Signing In</@common.header>
+
 	<form action="/login" method="post">
 		<div class="form-group">
 			<input type="hidden" name="_csrf" value="${_csrf.token}" />
