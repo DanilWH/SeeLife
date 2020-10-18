@@ -11,12 +11,11 @@
 
 <#macro password_form message>
 
-	<div>
+	<div class="form-group">
 		<label for="password_id">Password: </label>
-		<input id="password_id" type="password" name="password" required />
-	</div>
-	<div>
-		<small>
+		<input id="password_id" type="password" name="password" class="form-control ${(message?length == 0)?string("", "is-invalid")}" aria-describedby="passwordHelp" required />
+		
+		<small id="passwordHelp" class="form-text text-muted">
 			<ul>
 				<li>Your password can't be too similar to your other personal information.</li>
 				<li>Your password must contain at least 8 characters.</li>
@@ -24,11 +23,11 @@
 				<li>Your password can't be entirely numeric.</li>
 			</ul>
 		</small>
-	</div>
-	<div>
+		
 		<label id="password_confirm_id">Password (again): </label>
-		<input id="password_confirm_id" type="password" name="password_confirm" required />
+		<input id="password_confirm_id" type="password" name="password_confirm" class="form-control ${(message?length == 0)?string("", "is-invalid")}" aria-describedby="passwordHelp" required />
+		
+		<#if (message?length > 0)><div class="invalid-feedback">${message}</div></#if>
 	</div>
-	<div><small>${message?ifExists}</small></div>
 
 </#macro>
