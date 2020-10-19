@@ -63,9 +63,33 @@
 								
 								<!-- show images -->
 								<#if note.images?size != 0>
-									<div class="tab-pane fade" id="v-pills-images-${note.id}" role="tabpanel" aria-labelledby="v-pills-images-tab-${note.id}">
+									<div class="tab-pane fade text-center" id="v-pills-images-${note.id}" role="tabpanel" aria-labelledby="v-pills-images-tab-${note.id}">
 									  	<#list note.images as image>
-											<img src="/image/${image}" />
+									  		<#assign filename_parts = image?split('.') />
+									  		<#assign uuid = "uuid" + filename_parts[0] />
+									  		<#assign filename = filename_parts[1] + "." + filename_parts[2] />
+									  		
+											<img class="rounded mx-2 mb-3" src="/image/${image}" style="width: 30%; height: 30%;" data-toggle="modal" data-target="#${uuid}"/>
+											
+											<!-- Modal -->
+											<div class="modal fade bd-example-modal-lg" id="${uuid}" tabindex="-1" role="dialog" aria-labelledby="${uuid}Title" aria-hidden="true">
+												<div class="modal-dialog modal-lg" role="document">
+													<div class="modal-content">
+														<div class="modal-header">
+															<h5 class="modal-title" id="${uuid}Title">${filename}</h5>
+															<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+															  	<span aria-hidden="true">&times;</span>
+															</button>
+														</div>
+														<div class="modal-body">
+														    <img src="/image/${image}" style="width: 100%; height: 100%;" />
+														</div>
+														<div class="modal-footer">
+															<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+														</div>
+													</div>
+												</div>
+											</div>
 										</#list>
 									</div>
 								</#if>
