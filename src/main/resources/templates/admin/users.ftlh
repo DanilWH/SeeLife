@@ -1,36 +1,47 @@
 <#import "../parts/base.ftlh" as base />
+<#import "../parts/common.ftlh" as common />
 
 <@base.content title="Admin Privileges | See Life">
 
-	<h3>Select user to change</h3>
+	<@common.header>Select user to change</@common.header>
 	
-	<form action="/admin/users" method="get">
-		<input type="search" name="user_filter" placeholder="Search users" />
-		<button>Search</button>
-		<#if result??>
-			<div><small>${result} results (<a href="?">${total} total</a>)</small></div>
-		</#if>
+	<form action="/admin/users" method="get" class="form-inline">
+		<div class="form-group">
+			<input class="form-control mr-2" type="search" name="user_filter" placeholder="Search users" aria-describedby="resultDescribedby" />
+			<button class="btn btn-success">Search</button>
+		</div>
 	</form>
 	
+	<!-- results viewer -->
+	<#if result??>
+		<small id="resultDescribedby" class="text-muted ml-2">${result} results (<a href="?">${total} total</a>)</small>
+	</#if>
+	
 	<#if users?size != 0>
-		<table>
-			<tr>
-				<th>User ID</th>
-				<th>Username</th>
-				<th>User role</th>
-				<th></th>
-			</tr>
-			<#list users as user>
-			<tr>
-				<td>${user.id}</td>
-				<td>${user.username}</td>
-				<td><#list user.roles as role>${role}<#sep>,</#list></td>
-				<td><a href="/admin/edit_user/${user.id}">Edit</a></td>
-			</tr>
-			</#list>
+		
+		<table class="table mt-3">
+			<thead class="thead-dark">
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">First</th>
+					<th scope="col">Last</th>
+					<th scope="col">Handle</th>
+				</tr>
+			</thead>
+			<tbody>
+				<#list users as user>
+					<tr>
+						<th scope="row">${user.id}</th>
+						<td>${user.username}</td>
+						<td><#list user.roles as role>${role}<#sep>, </#list></td>
+						<td><a href="/admin/edit_user/${user.id}">Edit</a></td>
+					</tr>
+				</#list>
+			</tbody>
 		</table>
-	<#else>
-		<p>...There's no users found...</p>
+			<#else>
+		<h1>...This is impossible to see this page if there is no user...</h1>
+
 	</#if>
 
 </@base.content>
