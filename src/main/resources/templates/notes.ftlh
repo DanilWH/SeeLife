@@ -66,7 +66,7 @@
 									<div class="tab-pane fade text-center" id="v-pills-images-${note.id}" role="tabpanel" aria-labelledby="v-pills-images-tab-${note.id}">
 									  	<#list note.images as image>
 									  		<#assign filename_parts = image?split('.') />
-									  		<#assign uuid = "uuid" + filename_parts[0] />
+									  		<#assign uuid = "uuid-" + filename_parts[0] />
 									  		<#assign filename = filename_parts[1] + "." + filename_parts[2] />
 									  		
 											<img class="rounded mx-2 mb-3" src="/image/${image}" style="width: 30%; height: 30%;" data-toggle="modal" data-target="#${uuid}" />
