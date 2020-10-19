@@ -10,13 +10,22 @@
 		
 		<#if isRelevant == true>
 			<div class="navbar-nav">
-				<a href="">Edit title &#8595</a>
-				<form action="/edit_day/id/${day.id}" method="post">
-					<input type="hidden" name="_csrf" value="${_csrf.token}" />
-					<input type="text" name="dayTitle" placeholder="Change the day title" required />
-					<button name="submit">Change</button>
-					<div>${message?ifExists}</div>
-				</form>
+				<a class="btn btn-info" data-toggle="collapse" href="#collapseEditDayTitle" role="button" aria-expanded="false" aria-controls="collapseEditDayTitle">
+					Edit title
+				</a>
+			</div>
+			
+			<div class="collapse ml-3" id="collapseEditDayTitle">
+				<div class="card card-body">
+					<form action="/edit_day/id/${day.id}" method="post" class="form-inline">
+						<input type="hidden" name="_csrf" value="${_csrf.token}" />
+						<div class="form-group">
+							<input class="form-control mr-2" type="text" name="dayTitle" placeholder="Change the day title" required />
+							<button class="btn btn-outline-success" name="submit">Change</button>
+							<div>${message?ifExists}</div>
+						</div>
+					</form>
+				</div>
 			</div>
 		</#if>
 	</div>
