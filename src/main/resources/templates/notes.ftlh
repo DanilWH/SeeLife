@@ -69,7 +69,7 @@
 									  		<#assign uuid = "uuid" + filename_parts[0] />
 									  		<#assign filename = filename_parts[1] + "." + filename_parts[2] />
 									  		
-											<img class="rounded mx-2 mb-3" src="/image/${image}" style="width: 30%; height: 30%;" data-toggle="modal" data-target="#${uuid}"/>
+											<img class="rounded mx-2 mb-3" src="/image/${image}" style="width: 30%; height: 30%;" data-toggle="modal" data-target="#${uuid}" />
 											
 											<!-- Modal -->
 											<div class="modal fade bd-example-modal-lg" id="${uuid}" tabindex="-1" role="dialog" aria-labelledby="${uuid}Title" aria-hidden="true">
@@ -82,7 +82,7 @@
 															</button>
 														</div>
 														<div class="modal-body">
-														    <img src="/image/${image}" style="width: 100%; height: 100%;" />
+														    <img src="/image/${image}" style="width: 100%; height: 100%;" alt="Couldn't load ${filename}"/>
 														</div>
 														<div class="modal-footer">
 															<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -96,9 +96,9 @@
 								
 								<!-- show videos -->
 								<#if note.videos?size != 0>
-									<div class="tab-pane fade" id="v-pills-videos-${note.id}" role="tabpanel" aria-labelledby="v-pills-videos-tab-${note.id}">
+									<div class="tab-pane fade text-center" id="v-pills-videos-${note.id}" role="tabpanel" aria-labelledby="v-pills-videos-tab-${note.id}">
 									  	<#list note.videos as video>
-											<video src="/video/${video}" preload="metadata" controls></video>
+											<video class="rounded mx-2 mb-3" src="/video/${video}" preload="metadata" controls style="width: 30%; height: 30%;"></video>
 										</#list>
 									</div>
 								</#if>
