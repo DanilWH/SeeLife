@@ -11,7 +11,7 @@
 	    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 	    
 	    <!-- My CSS -->
-	    <link rel="stylesheet" type="text/css" href="/static/style.css">
+	    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
 	    
 		<title>${title}</title>
 	</head>
@@ -65,7 +65,7 @@
 		
 		<div class="container-fluid">
 		    <div class="row">
-			    <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+			    <nav class="col-md-2 d-none d-md-block bg-light sidebar" style="min-height: 93vh;">
 				    <div class="sidebar-sticky">
 					    <ul class="nav flex-column">
 						    <li class="nav-item">

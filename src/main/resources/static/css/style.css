@@ -21,3 +21,12 @@
 .submit-row .btn-info {
     text-transform: uppercase;
 }
+
+/* 404 error gif css configuration. */
+.fixed {
+	width: 30%;
+	height: auto;
+	position: absolute;
+	bottom: 0px;
+	left: 35%;
+}
