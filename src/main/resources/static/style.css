@@ -9,11 +9,15 @@
 }
 
 .submit-row p.deletelink-box {
-    float: right;
+    float: left;
     margin: 0;
 }
 
 .submit-row p.submit-box {
-    float: left;
+    float: right;
     margin: 0;
+}
+
+.submit-row .btn-info {
+    text-transform: uppercase;
 }

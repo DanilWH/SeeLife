@@ -3,7 +3,8 @@
 
 <@base.content title="Change ${username}'s password | Admin | See Life">
 
-	<h3>Change password: ${username}</h3>
+	<@common.header>Change password: ${username}</@common.header>
+	
 	<p>Enter a new password for the user <strong>${username}</strong>.</p>
 	
 	<form action="/admin/edit_user/${userId}/password" method="POST">
@@ -15,8 +16,11 @@
 		</fieldset>
 		
 		<input type="hidden" name="_csrf" value="${_csrf.token}" />
-		<div>
-			<button name="submit">CHANGE PASSWORD</button>
+		
+		<div class="submit-row">
+			<p class="submit-box">
+				<button class="btn btn-info" name="submit">change password</button>
+			</p>
 		</div>
 	</form>
 
