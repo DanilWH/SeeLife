@@ -34,7 +34,7 @@
 						<th scope="row">${user.id}</th>
 						<td>${user.username}</td>
 						<td><#list user.roles as role>${role}<#sep>, </#list></td>
-						<td><a href="/admin/edit_user/${user.id}">Edit</a></td>
+						<td><a href="/admin/edit_user/${user.id}">Change</a></td>
 					</tr>
 				</#list>
 			</tbody>

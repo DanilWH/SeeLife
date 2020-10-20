@@ -2,8 +2,8 @@
 
 	<div class="form-group">
 		<label for="username_id">Username</label>
-		<input id="username_id" class="form-control ${message?exists?string("is-invalid", "")}" type="text" name="username" value="${username}" aria-describedby="usernameHelp" placeholder="Enter username" required />
-		<#if message?exists><div class="invalid-feedback">${message}</div></#if>
+		<input id="username_id" class="form-control ${(message?length != 0)?string("is-invalid", "")}" type="text" name="username" value="${username}" aria-describedby="usernameHelp" placeholder="Enter username" required />
+		<#if (message?length != 0)><div class="invalid-feedback">${message}</div></#if>
 		<small id="usernameHelp" class="form-text text-muted">Required 150 characters or fewer. Letters, digits and @/./+/-/_ only.</small>
 	</div>
 
@@ -13,7 +13,7 @@
 
 	<div class="form-group">
 		<label for="password_id">Password</label>
-		<input id="password_id" type="password" name="password" class="form-control ${message?exists?string("is-invalid", "")}" aria-describedby="passwordHelp" required />
+		<input id="password_id" type="password" name="password" class="form-control ${(message?length != 0)?string("is-invalid", "")}" aria-describedby="passwordHelp" required />
 		
 		<small id="passwordHelp" class="form-text text-muted">
 			<ul>
@@ -27,9 +27,9 @@
 	
 	<div class="form-group">
 		<label id="password_confirm_id">Password (again): </label>
-		<input id="password_confirm_id" type="password" name="password_confirm" class="form-control ${message?exists?string("is-invalid", "")}" aria-describedby="passwordHelp" required />
+		<input id="password_confirm_id" type="password" name="password_confirm" class="form-control ${(message?length != 0)?string("is-invalid", "")}" aria-describedby="passwordHelp" required />
 		
-		<#if message?exists><div class="invalid-feedback">${message}</div></#if>
+		<#if (message?length != 0)><div class="invalid-feedback">${message}</div></#if>
 	</div>
 
 </#macro>

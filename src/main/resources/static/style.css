@@ -1,0 +1,19 @@
+.submit-row {
+    padding: 12px 14px;
+    margin: 0 0 20px;
+    background: #f8f8f8;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    text-align: right;
+    overflow: hidden;
+}
+
+.submit-row p.deletelink-box {
+    float: right;
+    margin: 0;
+}
+
+.submit-row p.submit-box {
+    float: left;
+    margin: 0;
+}
