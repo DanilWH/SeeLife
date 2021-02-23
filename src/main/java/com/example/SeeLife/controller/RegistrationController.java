@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,9 @@ public class RegistrationController {
     
     @Autowired
     private UserRepo userRepo;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping("/registration")
     public String registration() {
@@ -46,7 +50,10 @@ public class RegistrationController {
             return registration();
         
         // if everything is fine, save the user into the database.
-        User newUser = new User(username, password);
+        User newUser = new User();
+
+        newUser.setUsername(username);
+        newUser.setPassword(passwordEncoder.encode(password));
         newUser.setRoles(Collections.singleton(Role.USER));
         newUser.setActive(true);
         
