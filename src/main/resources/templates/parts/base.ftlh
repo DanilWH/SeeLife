@@ -14,6 +14,9 @@
 	    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
 	    
 		<title>${title}</title>
+
+		<!-- reCAPTCHA script. -->
+		<script src="https://www.google.com/recaptcha/api.js"></script>
 	</head>
 	<body>
 		
