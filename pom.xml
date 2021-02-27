@@ -19,6 +19,12 @@
 	</properties>
 
 	<dependencies>
+		<!-- Spring session for JDBC-->
+		<dependency>
+			<groupId>org.springframework.session</groupId>
+			<artifactId>spring-session-jdbc</artifactId>
+		</dependency>
+
 		<!-- Flyway. -->
 		<dependency>
 			<groupId>org.flywaydb</groupId>
