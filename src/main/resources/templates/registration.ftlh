@@ -26,7 +26,7 @@
 		<!-- password -->
 		<div class="form-group">
 			<label for="password_id">Password</label>
-			<input id="password_id" type="password" name="password" placeholer="Enter password"
+			<input id="password_id" type="password" name="password"
 				   aria-describedby="passwordHelp" required
 				   class="form-control ${(passwordError??)?string("is-invalid", "")}" />
 
@@ -49,7 +49,7 @@
 		<div class="form-group">
 			<label for="password_confirm_id">Password (again): </label>
 			<input id="password_confirm_id" type="password" name="password_confirm"
-				   placeholer="Repeat password" aria-describedby="passwordHelp" required
+				   aria-describedby="passwordHelp" required
 				   class="form-control ${(password_confirmError??)?string("is-invalid", "")}" />
 
 			<#if password_confirmError??>

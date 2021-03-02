@@ -66,27 +66,28 @@ public class RegistrationController {
         }
 
         // check if the password and confirm_password match.
-        boolean didPasswordsMatch = user.getPassword() != null && user.getPassword().equals(password_confirm);
-        if (!didPasswordsMatch) {
+        boolean passwordsMatches = user.getPassword() != null && user.getPassword().equals(password_confirm);
+        if (!passwordsMatches) {
             model.addAttribute("passwordError", "Password don't match!");
         }
 
+        // check if the user already exists.
+        boolean userExists = this.userRepo.findByUsername(user.getUsername()) != null;
+        if (userExists) {
+            model.addAttribute("usernameError", "The user already exists!");
+        }
+
+        // check all the errors. Get all the errors and return back to the registration page if there is any error.
         if (!responseDto.isSuccess() || Strings.isBlank(password_confirm) ||
-            !didPasswordsMatch || bindingResult.hasErrors())
+            !passwordsMatches || userExists || bindingResult.hasErrors())
         {
             Map<String, String> errorsMap = ControllersUtils.getErrors(bindingResult);
-            System.out.println(errorsMap);
             model.mergeAttributes(errorsMap);
 
             return "registration";
         }
 
-        // check if the user already exists.
-        if (this.userRepo.findByUsername(user.getUsername()) != null) {
-            model.addAttribute("usernameError", "The user already exists!");
-            return "registration";
-        }
-        
+
         // if everything is fine, save the user into the database.
         User newUser = new User();
 
