@@ -27,10 +27,12 @@ public class User implements UserDetails {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
 
-    @NotBlank(message = "Must not be blank!")
+    @Length(min = 3, max = 20, message = "Must be between 3 and 20!")
+    @NotBlank(message = "Username must not be blank!")
     private String username;
 
-    @NotBlank(message = "Must not be blank!")
+    @Length(min = 8, max = 20, message = "Must be between 8 and 20!")
+    @NotBlank(message = "Password must not be blank!")
     private String password;
 
     private boolean active;

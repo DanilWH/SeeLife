@@ -30,7 +30,13 @@
 				   aria-describedby="passwordHelp" required
 				   class="form-control ${(passwordError??)?string("is-invalid", "")}" />
 
-			<small id="passwordHelp" class="form-text text-muted">
+			<#if passwordError??>
+				<div class="invalid-feedback">
+					${passwordError?no_esc}
+				</div>
+			</#if>
+
+		<small id="passwordHelp" class="form-text text-muted">
 				<ul>
 					<li>Your password can't be too similar to your other personal information.</li>
 					<li>Your password must contain at least 8 characters.</li>

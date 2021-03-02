@@ -33,7 +33,7 @@ public class ControllersUtils {
             // merge two value if the Map contains the same key.
             // or just put a new set of key and value in the Map.
             if (errors.containsKey(fieldKey)) {
-                errors.merge(fieldKey, messageValue, (v1, v2) -> v1 + "\n" + v2);
+                errors.merge(fieldKey, messageValue, (v1, v2) -> v1 + "<br>" + v2);
             } else {
                 errors.put(fieldKey, messageValue);
             }

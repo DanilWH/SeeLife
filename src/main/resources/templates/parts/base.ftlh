@@ -44,7 +44,7 @@
 				</form>
 			    
 			    <ul class="navbar-nav">
-			    	<#if user??>
+			    	<#if context>
 			    		<li class="nav-item">
 							<a class="nav-link">Hello, ${user.getUsername()}.</a>
 						</li>
@@ -83,7 +83,7 @@
 						     </li>
 					    </ul>
 					    
-			            <#if user?? && user.isAdmin()>
+			            <#if context && user.isAdmin()>
 						    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
 				              	<span>Admin rights</span>
 				              	<a class="d-flex align-items-center text-muted" href="#">

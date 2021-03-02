@@ -1,7 +1,7 @@
 <#assign
-	know = Session.SPRING_SECURITY_CONTEXT??
+	context = Session.SPRING_SECURITY_CONTEXT??
 />
 
-<#if know>
+<#if context>
 	<#assign user = Session.SPRING_SECURITY_CONTEXT.authentication.principal />
 </#if>
