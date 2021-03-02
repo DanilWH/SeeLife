@@ -19,6 +19,12 @@
 	</properties>
 
 	<dependencies>
+		<!-- Bean validation. -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
 		<!-- Spring session for JDBC-->
 		<dependency>
 			<groupId>org.springframework.session</groupId>

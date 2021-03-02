@@ -7,10 +7,51 @@
 	
 	<form action="/registration" method="post">
 		<!-- username -->
-		<@common.username_form message="${username_msg?ifExists}" />
-		
+		<div class="form-group">
+			<label for="username_id">Username</label>
+			<input id="username_id"
+				   type="text" name="username" value="<#if userDto??>${userDto.username}</#if>"
+				   aria-describedby="usernameHelp" placeholder="Enter username" required
+				   class="form-control ${(usernameError??)?string("is-invalid", "")}" />
+
+			<#if usernameError??>
+				<div class="invalid-feedback">
+					${usernameError}
+				</div>
+			</#if>
+
+			<small id="usernameHelp" class="form-text text-muted">Required 150 characters or fewer. Letters, digits and @/./+/-/_ only.</small>
+		</div>
+
 		<!-- password -->
-		<@common.password_form message="${password_msg?ifExists}" />
+		<div class="form-group">
+			<label for="password_id">Password</label>
+			<input id="password_id" type="password" name="password" placeholer="Enter password"
+				   aria-describedby="passwordHelp" required
+				   class="form-control ${(passwordError??)?string("is-invalid", "")}" />
+
+			<small id="passwordHelp" class="form-text text-muted">
+				<ul>
+					<li>Your password can't be too similar to your other personal information.</li>
+					<li>Your password must contain at least 8 characters.</li>
+					<li>Your password can't be a commonly used password.</li>
+					<li>Your password can't be entirely numeric.</li>
+				</ul>
+			</small>
+		</div>
+
+		<div class="form-group">
+			<label for="password_confirm_id">Password (again): </label>
+			<input id="password_confirm_id" type="password" name="password_confirm"
+				   placeholer="Repeat password" aria-describedby="passwordHelp" required
+				   class="form-control ${(password_confirmError??)?string("is-invalid", "")}" />
+
+			<#if password_confirmError??>
+				<div class="invalid-feedback">
+					${password_confirmError}
+				</div>
+			</#if>
+		</div>
 
 		<!-- reCAPTCHA -->
 		<div class="form-group">

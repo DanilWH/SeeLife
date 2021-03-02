@@ -4,10 +4,13 @@ import java.util.Collections;
 import java.util.Map;
 
 import com.example.SeeLife.dto.CaptchaResponseDto;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +20,8 @@ import com.example.SeeLife.model.Role;
 import com.example.SeeLife.model.User;
 import com.example.SeeLife.repository.UserRepo;
 import org.springframework.web.client.RestTemplate;
+
+import javax.validation.Valid;
 
 @Controller
 public class RegistrationController {
@@ -41,39 +46,52 @@ public class RegistrationController {
     
     @PostMapping("/registration")
     public String add_user(
-            @RequestParam String username,
-            @RequestParam String password,
+            @Valid User user,
+            BindingResult bindingResult,
             @RequestParam String password_confirm,
             @RequestParam(name="g-recaptcha-response") String gRecaptchaResponse,
-            Map<String, Object> model
+            Model model
     ) {
         String url = String.format(CAPTCHA_URL, this.captchaSecret, gRecaptchaResponse);
         CaptchaResponseDto responseDto = restTemplate.postForObject(url, Collections.emptyList(), CaptchaResponseDto.class);
 
+        // check if the reCAPTCHA filled.
         if (!responseDto.isSuccess()) {
-            model.put("captchaError", "Fill captcha!");
+            model.addAttribute("captchaError", "Fill captcha!");
+        }
+
+        // check if the password_confirm isn't blank.
+        if (Strings.isBlank(password_confirm)) {
+            model.addAttribute("password_confirmError", "The field must not be blank!");
+        }
+
+        // check if the password and confirm_password match.
+        boolean didPasswordsMatch = user.getPassword() != null && user.getPassword().equals(password_confirm);
+        if (!didPasswordsMatch) {
+            model.addAttribute("passwordError", "Password don't match!");
+        }
+
+        if (!responseDto.isSuccess() || Strings.isBlank(password_confirm) ||
+            !didPasswordsMatch || bindingResult.hasErrors())
+        {
+            Map<String, String> errorsMap = ControllersUtils.getErrors(bindingResult);
+            System.out.println(errorsMap);
+            model.mergeAttributes(errorsMap);
+
             return "registration";
         }
 
-
         // check if the user already exists.
-        if (this.userRepo.findByUsername(username) != null) {
-            model.put("username_msg", "The user already exists!");
-            System.out.println(model.get("username_msg"));
-            return registration();
+        if (this.userRepo.findByUsername(user.getUsername()) != null) {
+            model.addAttribute("usernameError", "The user already exists!");
+            return "registration";
         }
-        
-        // check if the username and the password correct.
-        model.put("username_msg", CommonOperations.isUsernameValid(username, userRepo));
-        model.put("password_msg", CommonOperations.isPasswordValid(password, password_confirm));
-        if (model.get("username_msg") != null || model.get("password_msg") != null)
-            return registration();
         
         // if everything is fine, save the user into the database.
         User newUser = new User();
 
-        newUser.setUsername(username);
-        newUser.setPassword(passwordEncoder.encode(password));
+        newUser.setUsername(user.getUsername());
+        newUser.setPassword(passwordEncoder.encode(user.getPassword()));
         newUser.setRoles(Collections.singleton(Role.USER));
         newUser.setActive(true);
         

@@ -14,8 +14,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.PreRemove;
-import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -25,12 +26,13 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
-    
-    @Size(min=3, max=20)
+
+    @NotBlank(message = "Must not be blank!")
     private String username;
-    @Size(min=8, max=50)
+
+    @NotBlank(message = "Must not be blank!")
     private String password;
-    
+
     private boolean active;
     
     // allows to shape an additional table for storing an enum.

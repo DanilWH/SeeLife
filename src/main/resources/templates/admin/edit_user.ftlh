@@ -39,8 +39,8 @@
 					<label class="form-check-label" for="${role_value}">${role_value}</label>
 					
 					<!--
-						"Implement the description of each role later."
-					
+						"Implement the description of each role later." TODO
+
 						<div><small class="form-text text-muted">
 							Designates that this user has all permissions without explicitly assigning them.
 						</small></div>
