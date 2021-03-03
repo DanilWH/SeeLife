@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Map;
 
 import com.example.SeeLife.dto.CaptchaResponseDto;
+import com.example.SeeLife.service.UserService;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,10 +35,7 @@ public class RegistrationController {
     private RestTemplate restTemplate;
 
     @Autowired
-    private UserRepo userRepo;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private UserService userService;
 
     @GetMapping("/registration")
     public String registration() {
@@ -53,10 +51,11 @@ public class RegistrationController {
             Model model
     ) {
         String url = String.format(CAPTCHA_URL, this.captchaSecret, gRecaptchaResponse);
-        CaptchaResponseDto responseDto = restTemplate.postForObject(url, Collections.emptyList(), CaptchaResponseDto.class);
+        CaptchaResponseDto responseDto = this.restTemplate.postForObject(url, Collections.emptyList(), CaptchaResponseDto.class);
 
         // check if the reCAPTCHA filled.
-        if (!responseDto.isSuccess()) {
+        boolean isCaptchaSuccess = responseDto != null && responseDto.isSuccess();
+        if (!isCaptchaSuccess) {
             model.addAttribute("captchaError", "Fill captcha!");
         }
 
@@ -72,13 +71,13 @@ public class RegistrationController {
         }
 
         // check if the user already exists.
-        boolean userExists = this.userRepo.findByUsername(user.getUsername()) != null;
+        boolean userExists = this.userService.findByUsername(user.getUsername()) != null;
         if (userExists) {
             model.addAttribute("usernameError", "The user already exists!");
         }
 
         // check all the errors. Get all the errors and return back to the registration page if there is any error.
-        if (!responseDto.isSuccess() || Strings.isBlank(password_confirm) ||
+        if (!isCaptchaSuccess || Strings.isBlank(password_confirm) ||
             !passwordsMatches || userExists || bindingResult.hasErrors())
         {
             Map<String, String> errorsMap = ControllersUtils.getErrors(bindingResult);
@@ -87,17 +86,8 @@ public class RegistrationController {
             return "registration";
         }
 
+        this.userService.addUser(user);
 
-        // if everything is fine, save the user into the database.
-        User newUser = new User();
-
-        newUser.setUsername(user.getUsername());
-        newUser.setPassword(passwordEncoder.encode(user.getPassword()));
-        newUser.setRoles(Collections.singleton(Role.USER));
-        newUser.setActive(true);
-        
-        this.userRepo.save(newUser);
-        
         return "redirect:/";
     }
 }
