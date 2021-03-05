@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.PreRemove;
 
+import com.example.SeeLife.validation.ValidPassword;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,12 +28,11 @@ public class User implements UserDetails {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
 
-    @Length(min = 3, max = 20, message = "Must be between 3 and 20!")
-    @NotBlank(message = "Username must not be blank!")
+    @NotBlank(message = "Username must not be blank.")
     private String username;
 
-    @Length(min = 8, max = 20, message = "Must be between 8 and 20!")
-    @NotBlank(message = "Password must not be blank!")
+    @NotBlank(message = "Password must not be blank.")
+    @ValidPassword
     private String password;
 
     private boolean active;

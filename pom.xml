@@ -19,6 +19,13 @@
 	</properties>
 
 	<dependencies>
+		<!-- Passay (password validator). -->
+		<dependency>
+			<groupId>org.passay</groupId>
+			<artifactId>passay</artifactId>
+			<version>1.6.0</version>
+		</dependency>
+
 		<!-- Bean validation. -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -65,7 +72,7 @@
 		    <artifactId>validation-api</artifactId>
 		</dependency>
 		
-		<!-- freemarker dependences -->
+		<!-- freemarker dependency. -->
 		<dependency>
 		  	<groupId>org.springframework.boot</groupId>
 		  	<artifactId>spring-boot-starter-freemarker</artifactId>

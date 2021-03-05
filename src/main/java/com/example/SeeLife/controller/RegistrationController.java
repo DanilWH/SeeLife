@@ -61,19 +61,19 @@ public class RegistrationController {
 
         // check if the password_confirm isn't blank.
         if (Strings.isBlank(password_confirm)) {
-            model.addAttribute("password_confirmError", "The field must not be blank!");
+            model.addAttribute("password_confirmError", "The field must not be blank.");
         }
 
         // check if the password and confirm_password match.
         boolean passwordsMatches = user.getPassword() != null && user.getPassword().equals(password_confirm);
         if (!passwordsMatches) {
-            model.addAttribute("passwordError", "Password don't match!");
+            model.addAttribute("passwordError", "Passwords don't match.");
         }
 
         // check if the user already exists.
         boolean userExists = this.userService.findByUsername(user.getUsername()) != null;
         if (userExists) {
-            model.addAttribute("usernameError", "The user already exists!");
+            model.addAttribute("usernameError", "The user already exists.");
         }
 
         // check all the errors. Get all the errors and return back to the registration page if there is any error.
