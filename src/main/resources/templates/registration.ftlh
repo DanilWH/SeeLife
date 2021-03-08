@@ -20,7 +20,7 @@
 				</div>
 			</#if>
 
-			<small id="usernameHelp" class="form-text text-muted">Required 150 characters or fewer. Letters, digits and @/./+/-/_ only.</small>
+			<small id="usernameHelp" class="form-text text-muted">Required 20 characters or fewer. Letters, digits and @/./+/-/_ only.</small>
 		</div>
 
 		<!-- password -->

@@ -1,25 +1,14 @@
 package com.example.SeeLife.model;
 
-import java.util.Collection;
-import java.util.Set;
-
-import javax.persistence.CollectionTable;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.PreRemove;
-
 import com.example.SeeLife.validation.ValidPassword;
-import org.hibernate.validator.constraints.Length;
+import com.example.SeeLife.validation.ValidUsername;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.persistence.*;
+import java.util.Collection;
+import java.util.Set;
 
 @Entity
 public class User implements UserDetails {
@@ -29,6 +18,7 @@ public class User implements UserDetails {
     private Long id;
 
     @NotBlank(message = "Username must not be blank.")
+    @ValidUsername
     private String username;
 
     @NotBlank(message = "Password must not be blank.")
