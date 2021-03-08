@@ -10,7 +10,7 @@
 		<div class="form-group">
 			<label for="username_id">Username</label>
 			<input id="username_id"
-				   type="text" name="username" value="<#if userDto??>${userDto.username}</#if>"
+				   type="text" name="username" value="${username?ifExists}"
 				   aria-describedby="usernameHelp" placeholder="Enter username" required
 				   class="form-control ${(usernameError??)?string("is-invalid", "")}" />
 
@@ -32,7 +32,7 @@
 
 			<#if passwordError??>
 				<div class="invalid-feedback">
-					${passwordError?no_esc}
+					${passwordError?noEsc}
 				</div>
 			</#if>
 
